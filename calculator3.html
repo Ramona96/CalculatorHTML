@@ -1,0 +1,263 @@
+<html>
+
+<head>
+<meta charset="UTF-8">
+
+    <style>
+
+    table {
+        position: absolute;
+        border: 1px solid black;
+        border-collapse: collapse;
+        color: white;
+
+        font-family: helvetica;
+        font-size: 19px;
+        font-weight: 100;
+		
+        box-shadow: 3px 1px 52px -13px rgba(0,0,0,1);
+
+    }
+
+     td {
+         height: 48px;
+         width: 55px;
+         border: 1px solid rgb(99, 97, 95);
+         text-align: center;
+         background-color: rgb(136, 133, 132);
+         user-select: none;
+     }   
+
+     td.dark {
+        background-color: rgb(114, 111, 110);
+     }
+
+     td.orange {
+        background-color: rgb(253, 138, 43);
+     }
+
+
+
+     #ecran {
+
+        height: 80px;
+
+        background-color: rgb(87, 84, 83);
+
+        text-align: right;
+
+        padding-right: 14px;
+
+        font-size: 50px;
+
+        max-width: 215px;
+
+        min-width: 215px;
+
+        overflow-x: auto;
+
+        display: table-cell;
+
+        vertical-align: middle;
+
+     }
+
+
+
+     td.tasta0 {
+
+         text-align: left;
+
+         padding-left: 25px;
+
+     }
+	 
+	 div#op {
+         min-width: 30px;
+         min-height: 30px;
+         max-width: 30px;
+         max-height: 30px;
+         position: absolute;
+     }
+
+
+
+    </style>
+
+</head>
+
+<body>
+
+    
+
+    <table id="calc" unselectable="on">
+
+        <tr class=""><td colspan=4>
+
+
+             <div id="op"></div>
+            <div id="ecran"></div>
+
+            
+
+            </td></tr>
+
+        <tr><td class="dark">AC</td><td class="dark">+/-</td><td class="dark">%</td><td class="orange">÷</td></tr>
+
+        <tr><td>7</td><td>8</td><td>9</td><td class="orange">x</td></tr>
+
+        <tr><td>4</td><td>5</td><td>6</td><td class="orange">-</td></tr>
+
+        <tr><td>1</td><td>2</td><td>3</td><td class="orange">+</td></tr>
+
+        <tr><td colspan=2 class="tasta0">0</td><td>.</td><td class="orange">=</td></tr>
+
+    </table>
+
+
+
+
+
+<div id="data" style="position:absolute; right:40px; border: 1px solid black">
+
+
+
+</div>
+
+<script>
+
+var calc = document.getElementById("calc");
+var ecran = document.getElementById("ecran");
+var op = document.getElementById("op");
+var virgulaPusa = false;
+var semn = 1;
+var ultimaOperatie = null;
+var ultimaVal = null;
+
+function mouseUpEventHandler( e ) {
+
+    e = e || window.event;
+
+
+
+    console.log(e.target.innerHTML);
+
+    if(e.target.id != "ecran") {
+
+        var tasta = e.target.innerHTML;
+
+        if((tasta >= "0" && tasta <= "9") || (tasta == "." && virgulaPusa == false)) {
+
+            if(tasta == "."){
+
+                virgulaPusa = true;
+
+                if(ecran.innerHTML == ""){
+
+                     ecran.innerHTML = "0";
+
+            
+
+                }
+
+            } 
+
+            ecran.innerHTML += tasta;
+
+            ecran.scrollLeft = ecran.scrollWidth;
+
+
+
+        }else{
+		   switch(tasta){
+		      case "AC":
+			      ecran.innerHTML = "";
+				  virgulaPusa = false;
+				  semn = 1;
+				  ultimaOperatie = null;
+				  break;
+				  
+			   case "+/-":	 
+                   semn = -1*semn;
+                   ecran.innerHTML *= -1;
+                   break;
+
+               case "%":	
+                   ecran.innerHTML /= 100;
+				   if(ecran.innerHTML>0 && ecran.innerHTML < 1){
+				         virgulaPusa=true;
+				   }
+				    break;
+				   
+			   case "÷":
+                   ultimaVal = ecran.innerHTML;
+				   ultimaOperatie = "/";
+				   op.innerHTML = ultimaOperatie;
+				   ecran.innerHTML = "";
+				   virgulaPusa = false;
+				   break;
+				   
+				   
+				case "x":
+
+                        ultimaOperatie = "*"; 
+                        ultimaVal = ecran.innerHTML;
+                        op.innerHTML = ultimaOperatie;
+                        ecran.innerHTML = "";
+                        virgulaPusa = false; 
+                        break;
+
+                case "-":
+				
+                        ultimaOperatie = "-"; 
+                        ultimaVal = ecran.innerHTML;
+                        op.innerHTML = ultimaOperatie;
+                        ecran.innerHTML = "";
+                        virgulaPusa = false;  
+                        break;
+
+                case "+":
+
+                        ultimaOperatie = "+"
+                        ultimaVal = ecran.innerHTML;
+                        op.innerHTML = ultimaOperatie;
+                        ecran.innerHTML = "";
+                        virgulaPusa = false; 
+                        break;    
+				   
+				case "=":
+				    if(ultimaOperatie != null && ecran.innerHTML != ""){
+					       ecran.innerHTML = "" + eval(ultimaVal + ultimaOperatie + ecran.innerHTML);
+						    if(ecran.innerHTML.indexOf(".") > 0){
+                                virgulaPusa = true;
+                            }else {
+                                virgulaPusa = false;
+                            }
+                            ultimaValVal = null;
+                            ultimaOperatie = null;
+                            op.innerHTML = "";
+					}
+					
+				   
+                   				   
+				   
+			     
+		   }
+		}
+
+    }
+
+}
+
+
+
+calc.addEventListener("mouseup", mouseUpEventHandler);
+
+
+
+</script>
+
+</body>
+
+</html>
+
